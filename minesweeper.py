@@ -13,7 +13,7 @@ class MineBoard:
                 board_row.append(0)
             self.board.append(board_row)
         return
-    
+
     def seed_board(self):
         for i in range(self.mines):
             rand_x = int(random.random() * self.x)
@@ -44,9 +44,9 @@ class MineBoard:
             for j in range(self.y):
                 if self.board[i][j] == 'x':
                     x_range, y_range = self.get_adjacent(i,j)
-                    for a in range(3):
-                        for b in range(3):
-                            if a == 0 and b == 0:
+                    for a in range(len(x_range)):
+                        for b in range(len(y_range)):
+                            if not (x_range[a] == 0 and y_range[b] == 0):
                                 if not self.board[i+x_range[a]][j+y_range[b]] == 'x':
                                     self.board[i+x_range[a]][j+y_range[b]] += 1
 
@@ -56,6 +56,7 @@ class MineBoard:
             for j in i:
                 print(j, end= '|')
             print('\n')
+
 game_board = MineBoard(16,16,40)
 
 print(game_board.board)
@@ -64,5 +65,3 @@ game_board.seed_board()
 game_board.load_numbers()
 
 print(game_board.to_string())
-
-

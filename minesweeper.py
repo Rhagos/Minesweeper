@@ -6,6 +6,8 @@ class MineBoard:
         self.board = []
         self.mines = mine_count
 
+    def get_size(self):
+        return [self.x, self.y, self.mines]
     def init_board(self):
         for i in range(self.x):
             board_row = []
@@ -52,10 +54,33 @@ class MineBoard:
 
 
     def to_string(self):
+        row_index = 0
+        print("   ", end = ' ')
+        for i in range(self.x):
+            print(i, end = '  ')
+        print('\n')
         for i in self.board:
-            for j in i:
-                print(j, end= '|')
+            print(row_index, end = ' '*(4-len(str(row_index))))
+            col_index = 0
+            while col_index < self.x:
+                print(i[col_index], end= ' '*(1+len(str(col_index))))
+                col_index += 1
             print('\n')
+            row_index += 1
+
+class DisplayBoard():
+    def __init__(self, mine_board):
+        self.underlay = mine_board
+        self.over_x = mine_board.get_size()[0]
+        self.over_y = mine_board.get_size()[1]
+        self.overlay = []
+    def generate_overlay(self):
+        for i in range(self.over_x):
+            row = []
+            for j in range(self.over_y):
+                row.append(j)
+            self.overlay.append(row)
+    
 
 game_board = MineBoard(16,16,40)
 

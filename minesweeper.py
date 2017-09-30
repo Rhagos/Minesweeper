@@ -69,24 +69,47 @@ class MineBoard:
             row_index += 1
 
 class DisplayBoard():
+    #Overlay grid will begin with all true values, when a value is False
+    #the MineBoard will be displayed
     def __init__(self, mine_board):
         self.underlay = mine_board
-        self.over_x = mine_board.get_size()[0]
-        self.over_y = mine_board.get_size()[1]
+        self.x = mine_board.get_size()[0]
+        self.y = mine_board.get_size()[1]
         self.overlay = []
     def generate_overlay(self):
-        for i in range(self.over_x):
+        for i in range(self.x):
             row = []
-            for j in range(self.over_y):
-                row.append(j)
+            for j in range(self.y):
+                row.append(True)
             self.overlay.append(row)
-    
+    def display(self):
+        row_index = 0
+        print("   ", end = ' ')
+        for i in range(self.x):
+            print(i, end = '  ')
+        print('\n')
+        while row_index < self.y:
+            #Prints the row number
+            print(row_index, end = ' '*(4-len(str(row_index))))
+            col_index = 0
+            while col_index < self.x:
+                #Spaces the column number
+                col_num_spacing = ' '*(1+len(str(col_index)))
+                #Prints O if not revealed(True), else prints the corresponding value
+                if self.overlay[row_index][col_index]:
+                    print("O", end = col_num_spacing)
+                else:
+                    print(i[col_index], end= col_num_spacing)
+                col_index += 1
+            print('\n')
+            row_index += 1
+
 
 game_board = MineBoard(16,16,40)
-
-print(game_board.board)
+overlay_board = DisplayBoard(game_board)
 game_board.init_board()
 game_board.seed_board()
 game_board.load_numbers()
 
-print(game_board.to_string())
+overlay_board.generate_overlay()
+overlay_board.display()

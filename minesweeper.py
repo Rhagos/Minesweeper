@@ -70,9 +70,15 @@ class MineBoard:
             print('\n')
             row_index += 1
 
+    def prep_board(self):
+        self.init_board()
+        self.seed_board()
+        self.load_numbers()
 class DisplayBoard:
-    #Overlay grid will begin with all true values, when a value is False
-    #the MineBoard will be displayed
+    #Overlay grid will begin with all 0,
+    #When a space is changed to -1, the underlay is displayed
+    #When a space is changed to 1, it is flagged
+
     def __init__(self, mine_board):
         self.underlay = mine_board
         self.x = mine_board.get_size()[0]
@@ -82,15 +88,19 @@ class DisplayBoard:
         for i in range(self.x):
             row = []
             for j in range(self.y):
-                row.append(True)
+                row.append(0)
             self.overlay.append(row)
-
+    def flag_space(self, x_coord, y_coord):
+        self.overlay[y_coord][x_coord] = 1
+    def unflag_space(self, x_coord,y_coord):
+        self.overlay[y_coord][x_coord] = 0
 
 
 class Minesweeper:
-    def __init__(self, display, mines):
+    def __init__(self, display, mine_board):
         self.display_board = display
-        self.underlay = mines
+        self.underlay = mine_board
+        self.flags = self.underlay.mines
         #Game status represents which stage of the game is currently going on
         #0 = Still playing
         #1 = Victory
@@ -98,14 +108,36 @@ class Minesweeper:
         self.game_status = 0
 
     def flip_tile(self, targ_x, targ_y):
-        if self.display_board.overlay[targ_y][targ_x]:
-            self.display_board.overlay[targ_y][targ_x] = False
+        if targ_x < 0 or targ_x > self.underlay.x:
+            return "Out of bounds"
+        if targ_y < 0 or targ_y > self.underlay.y:
+            return "Out of bounds"
+        if self.display_board.overlay[targ_y][targ_x] == 0:
+            self.display_board.overlay[targ_y][targ_x] = -1
             if self.underlay.board[targ_y][targ_x] == 0:
                 fillable = self.underlay.get_adjacent(targ_x, targ_y)
                 for i in fillable[0]:
                     for j in fillable[1]:
                         if not (i == 0 and j == 0):
                             self.flip_tile(targ_x + i, targ_y + j)
+
+    def flag_tile(self, x_coord, y_coord):
+        print(self.flags)
+        if self.display_board.overlay[y_coord][x_coord] == -1:
+            print('Can\'t flag a discovered tile')
+        elif self.display_board.overlay[y_coord][x_coord] == 0:
+            if self.flags <= 0:
+                print('Not enough flags')
+                return
+            else:
+                self.flags -= 1
+                self.display_board.flag_space(x_coord, y_coord)
+        else:
+            self.flags += 1
+            self.display_board.unflag_space(x_coord, y_coord)
+
+
+
     def display(self):
         if self.game_status != 0:
             print("Game has ended")
@@ -128,10 +160,12 @@ class Minesweeper:
                 col_num_spacing = ' '*(1+len(str(col_index)))
 
                 #Prints O if not revealed(True), else prints the corresponding value
-                if self.display_board.overlay[row_index][col_index]:
+                if self.display_board.overlay[row_index][col_index] == 0:
                     print("H", end = col_num_spacing)
+                elif self.display_board.overlay[row_index][col_index] == 1:
+                    print("F", end = col_num_spacing)
                 else:
-                    print(self.underlay.board[row_index][col_index], end= col_num_spacing)
+                    print(self.underlay.board[row_index][col_index], end=col_num_spacing)
                     if self.underlay.board[row_index][col_index] == 'x':
                         self.game_status = -1
 
@@ -155,32 +189,55 @@ class Minesweeper:
     def check_victory(self):
         for i in range(self.underlay.y):
             for j in range(self.underlay.x):
-                if self.display_board.overlay[i][j]:
-                    if not self.underlay.board[i][j] == 'x':
+                if self.display_board.overlay[i][j] == 0:
+                    if self.underlay.board[i][j] == 'x':
+                        #If there is an unflagged, uncovered mine, keep playing
                         return 0
+
         return 1
 
+    def action(self, list_args):
+        if not len(list_args) == 3:
+            print("Incorrect args")
+            return
+        if list_args[0] != "flip_tile" and list_args[0] != "flag_tile":
+            print("Invalid command")
+            return
+        if hasattr(self, list_args[0]):
+            params = []
+            for arg in list_args[1:]:
+                params.append(int(arg))
+            getattr(self, list_args[0])(params[0], params[1])
+        else:
+            print("Incorrect Function")
     def play_loop(self):
         self.display()
         while self.game_status == 0:
-            x, y = input("X and Y to clear: ").split()
-            x, y = int(x), int(y)
-            if x >= 0 and x < self.underlay.x and y >= 0 and y < self.underlay.y:
-                self.flip_tile(x,y)
-                for i in range(5):
-                    print('\n')
-                self.display()
-                if self.check_victory():
-                    self.game_status = 1
-            else:
-                print('Invalid coordinates')
+            # x, y = input("X and Y to clear: ").split()
+            # x, y = int(x), int(y)
+            # if x >= 0 and x < self.underlay.x and y >= 0 and y < self.underlay.y:
+            #     self.flip_tile(x,y)
+            #     for i in range(5):
+            #         print('\n')
+            #     self.display()
+            #     if self.check_victory():
+            #         self.game_status = 1
+            # else:
+            #     print('Invalid coordinates')
+            self.action(input(">").split())
+            for i in range(5):
+                print('\n')
+
+            if self.check_victory():
+                self.game_status = 1
+
+            self.display()
+
         print(self.check_status())
 
 game_board = MineBoard(5,5,40)
 overlay_board = DisplayBoard(game_board)
-game_board.init_board()
-game_board.seed_board()
-game_board.load_numbers()
+game_board.prep_board()
 
 overlay_board.generate_overlay()
 

@@ -13,7 +13,7 @@ class MineBoard:
                 board_row.append(0)
             self.board.append(board_row)
         return
-    
+
     def seed_board(self):
         for i in range(self.mines):
             rand_x = int(random.random() * self.x)
@@ -56,6 +56,9 @@ class MineBoard:
             for j in i:
                 print(j, end= '|')
             print('\n')
+
+
+#Test out game board functionality
 game_board = MineBoard(16,16,40)
 
 print(game_board.board)
@@ -64,5 +67,3 @@ game_board.seed_board()
 game_board.load_numbers()
 
 print(game_board.to_string())
-
-

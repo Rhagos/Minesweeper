@@ -234,12 +234,3 @@ class Minesweeper:
             self.display()
 
         print(self.check_status())
-
-game_board = MineBoard(5,5,40)
-overlay_board = DisplayBoard(game_board)
-game_board.prep_board()
-
-overlay_board.generate_overlay()
-
-game_state = Minesweeper(overlay_board, game_board)
-game_state.play_loop()

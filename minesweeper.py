@@ -18,10 +18,6 @@ class MineBoard:
             for j in range(self.y):
                 board_row.append(0)
             self.board.append(board_row)
-<<<<<<< HEAD
-        return
-=======
->>>>>>> 3e1def893584922aed8c12a72dc6cf0e9ea9365a
 
     def seed_board(self):
         for i in range(self.mines):
@@ -72,12 +68,6 @@ class MineBoard:
                 print(i[col_index], end= ' '*(1+len(str(col_index))))
                 col_index += 1
             print('\n')
-<<<<<<< HEAD
-
-
-#Test out game board functionality
-game_board = MineBoard(16,16,40)
-=======
             row_index += 1
 
     def prep_board(self):
@@ -159,7 +149,6 @@ class Minesweeper:
         for i in range(self.underlay.x):
             print(i, end = '  ')
         print('\n')
->>>>>>> 3e1def893584922aed8c12a72dc6cf0e9ea9365a
 
         while row_index < self.underlay.y:
             #Prints the row number
@@ -241,25 +230,7 @@ class Minesweeper:
 
             if self.check_victory():
                 self.game_status = 1
-<<<<<<< HEAD
 
             self.display()
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-print(game_board.to_string())
-=======
-overlay_board.generate_overlay()
-
-game_state = Minesweeper(overlay_board, game_board)
-game_state.play_loop()
->>>>>>> 3e1def893584922aed8c12a72dc6cf0e9ea9365a
-=======
-        print(self.check_status())
->>>>>>> 740c25472e305746be97abfe92a2b4e98d802a02
-=======
-
-            self.display()
-
-        print(self.check_status())
->>>>>>> 740c25472e305746be97abfe92a2b4e98d802a02
+print(self.check_status())

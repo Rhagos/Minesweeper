@@ -241,6 +241,7 @@ class Minesweeper:
 
             if self.check_victory():
                 self.game_status = 1
+<<<<<<< HEAD
 
             self.display()
 
@@ -254,5 +255,11 @@ game_state = Minesweeper(overlay_board, game_board)
 game_state.play_loop()
 >>>>>>> 3e1def893584922aed8c12a72dc6cf0e9ea9365a
 =======
+        print(self.check_status())
+>>>>>>> 740c25472e305746be97abfe92a2b4e98d802a02
+=======
+
+            self.display()
+
         print(self.check_status())
 >>>>>>> 740c25472e305746be97abfe92a2b4e98d802a02

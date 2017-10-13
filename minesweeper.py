@@ -234,3 +234,9 @@ class Minesweeper:
             self.display()
 
         print(self.check_status())
+
+def terminal_gui():
+    game_board = MineBoard(16,16,40)
+    overlay_board = DisplayBoard(game_board)
+    game_board.prep_board()
+    game = Minesweeper(overlay_board, game_board)

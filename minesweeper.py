@@ -233,4 +233,4 @@ class Minesweeper:
 
             self.display()
 
-print(self.check_status())
+        print(self.check_status())

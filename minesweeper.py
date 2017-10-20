@@ -159,7 +159,7 @@ class Minesweeper:
                 #Spaces the column number
                 col_num_spacing = ' '*(1+len(str(col_index)))
 
-                #Prints O if not revealed(True), else prints the corresponding value
+                #Prints H if not revealed(True), else prints the corresponding value
                 if self.display_board.overlay[row_index][col_index] == 0:
                     print("H", end = col_num_spacing)
                 elif self.display_board.overlay[row_index][col_index] == 1:
